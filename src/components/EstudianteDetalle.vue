@@ -1,11 +1,10 @@
 <template>
   <div class="vista">
-    <h1>Buscar por ID</h1>
-    <div class="form">
-      <input v-model="id" type="number" placeholder="ID del estudiante">
-      <button @click="buscar">Consultar</button>
-    </div>
-    <div v-if="est" class="resultado-card">
+    <h2>2. Buscar por ID</h2>
+    <input v-model="id" type="number" placeholder="ID">
+    <button @click="buscar">Buscar</button>
+
+    <div v-if="est" class="resultado">
       <p><strong>Nombre:</strong> {{ est.nombre }} {{ est.apellido }}</p>
       <p><strong>Fecha Nac:</strong> {{ est.fechaNacimiento }}</p>
       <p><strong>Provincia:</strong> {{ est.provincia }}</p>
@@ -20,8 +19,7 @@ export default {
   data: () => ({ id: '', est: null }),
   methods: {
     async buscar() {
-      try { this.est = await consultarPorIdFachada(this.id); }
-      catch { alert("No encontrado"); }
+      this.est = await consultarPorIdFachada(this.id);
     }
   }
 }

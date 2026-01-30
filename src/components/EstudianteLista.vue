@@ -1,11 +1,17 @@
 <template>
   <div class="vista">
-    <h1>Listado de Estudiantes</h1>
-    <button @click="cargar">Actualizar Tabla</button>
-    <table v-if="lista.length" class="tabla-estudiantes">
+    <h2>1. Listado Completo</h2>
+    <button @click="consultar">Cargar Datos</button>
+    
+    <table v-if="lista.length" border="1">
       <thead>
         <tr>
-          <th>ID</th><th>Nombre</th><th>Apellido</th><th>Fecha Nac.</th><th>Provincia</th><th>Género</th>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Fecha Nac.</th>
+          <th>Provincia</th>
+          <th>Género</th>
         </tr>
       </thead>
       <tbody>
@@ -27,13 +33,15 @@ import { consultarTodosFachada } from "@/client/MatriculaClient.js";
 export default {
   data: () => ({ lista: [] }),
   methods: {
-    async cargar() { this.lista = await consultarTodosFachada(); }
-  },
-  mounted() { this.cargar(); } // Carga automáticamente al entrar
+    async consultar() {
+      const res = await consultarTodosFachada();
+      this.lista = res;
+    }
+  }
 }
 </script>
 
-<style> 
+<style>
 .vista {
   display: flex;
   flex-direction: column; /* Pone los elementos uno debajo de otro */
@@ -41,4 +49,11 @@ export default {
   justify-content: center;
   width: 100%;            /* Asegura que use todo el ancho de la pantalla */
   padding: 20px;
-}</style>
+}
+
+.tabla-estudiantes {
+  margin-top: 20px;
+  width: 80%;             /* La tabla ocupará el 80% del ancho */
+  border-collapse: collapse;
+}
+</style>
