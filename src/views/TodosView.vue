@@ -23,22 +23,36 @@
 </template>
 
 <script>
+import { getToken } from "@/client/AuthorizationClient";
+import { setToken } from "@/client/MatriculaClient";
 import { consultarTodosFachada } from "@/client/MatriculaClient.js";
 export default {
   data: () => ({ lista: [] }),
   methods: {
     async cargar() { this.lista = await consultarTodosFachada(); }
   },
-  mounted() { this.cargar(); } // Carga automáticamente al entrar
+  async mounted() {
+    try {
+      
+      const tokenData = await getToken("admin", "1234");
+      console.log("Token obtenido para Ver Todos:", tokenData);
+      
+      
+      localStorage.setItem('auth_token', tokenData.accessToken);
+      
+    } catch (error) {
+      console.error("Error al obtener el token quemado:", error);
+    }
+  }
 }
 </script>
 
 <style> 
 .vista {
   display: flex;
-  flex-direction: column; /* Pone los elementos uno debajo de otro */
-  align-items: center;    /* Centra horizontalmente todo lo que esté dentro */
+  flex-direction: column; 
+  align-items: center;    
   justify-content: center;
-  width: 100%;            /* Asegura que use todo el ancho de la pantalla */
+  width: 100%;            
   padding: 20px;
 }</style>

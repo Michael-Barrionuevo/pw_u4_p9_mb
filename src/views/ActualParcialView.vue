@@ -12,18 +12,35 @@
 </template>
 
 <script>
+import { getToken } from "@/client/AuthorizationClient";
 import { actualizarParcialFachada } from "@/client/MatriculaClient.js";
+
 export default {
   data: () => ({ id: '', campos: { nombre: '', provincia: '' } }),
   methods: {
     async parcial() {
-      // Solo enviamos los campos que tienen texto
-      const body = {};
-      if(this.campos.nombre) body.nombre = this.campos.nombre;
-      if(this.campos.provincia) body.provincia = this.campos.provincia;
-      
-      await actualizarParcialFachada(this.id, body);
-      alert("Parcial actualizado!");
+      try {
+        if (!this.id) return alert("El ID es obligatorio");
+        const body = {};
+        if (this.campos.nombre.trim()) body.nombre = this.campos.nombre;
+        if (this.campos.provincia.trim()) body.provincia = this.campos.provincia;
+
+        await actualizarParcialFachada(this.id, body);
+        alert("¡Actualización parcial exitosa!");
+        this.campos = { nombre: '', provincia: '' };
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error en la actualización parcial.");
+      }
+    }
+  },
+  async mounted() {
+    try {
+      const tokenData = await getToken("admin", "1234");
+      localStorage.setItem('auth_token', tokenData.accessToken);
+      console.log("Token obtenido para Actualización Parcial:", tokenData);
+    } catch (error) {
+      console.error("Error al obtener token:", error);
     }
   }
 }

@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { getToken } from "@/client/AuthorizationClient";
+import { setToken } from "@/client/MatriculaClient";
 import { consultarPorIdFachada } from "@/client/MatriculaClient.js";
 export default {
   data: () => ({ id: '', est: null }),
@@ -23,6 +25,19 @@ export default {
       try { this.est = await consultarPorIdFachada(this.id); }
       catch { alert("No encontrado"); }
     }
-  }
+  },
+    async mounted() {
+    try {
+      
+      const tokenData = await getToken("admin", "1234");
+      console.log("Token obtenido para Buscar por ID:", tokenData);
+      
+      
+      localStorage.setItem('auth_token', tokenData.accessToken);
+      
+    } catch (error) {
+      console.error("Error al obtener el token quemado:", error);
+    }
+  },
 }
 </script>

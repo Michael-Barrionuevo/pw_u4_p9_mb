@@ -25,20 +25,39 @@
 
 <script>
 import { guardarFachada } from "@/client/MatriculaClient.js";
+
 export default {
   data: () => ({
-    estudiante: { nombre: '', apellido: '', fechaNacimiento: '', provincia: '', genero: '' }
+    estudiante: { 
+      nombre: '', 
+      apellido: '', 
+      fechaNacimiento: '', 
+      provincia: '', 
+      genero: '' 
+    }
   }),
   methods: {
-    async guardar() {
-      try {
-        await guardarFachada(this.estudiante);
-        alert("Estudiante guardado con éxito");
-        this.estudiante = { nombre: '', apellido: '', fechaNacimiento: '', provincia: '', genero: '' };
-      } catch (error) {
-        console.error(error);
-      }
-    }
+   async guardar() {
+  try {
+    // Verificación rápida
+    if (!this.estudiante.fechaNacimiento) return alert("Falta la fecha");
+
+    const payload = {
+      nombre: this.estudiante.nombre,
+      apellido: this.estudiante.apellido,
+      fechaNacimiento: this.estudiante.fechaNacimiento + "T00:00:00",
+      provincia: this.estudiante.provincia,
+      genero: this.estudiante.genero,
+      hijos: [] // Enviamos una lista vacía para que Quarkus no reciba un null inesperado
+    };
+
+    await guardarFachada(payload);
+    alert("¡Guardado!");
+    // ... resetear formulario
+  } catch (error) {
+    console.error("Error 400 - Detalles:", error.response?.data);
+  }
+}
   }
 }
 </script>
