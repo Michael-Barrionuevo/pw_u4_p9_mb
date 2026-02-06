@@ -91,22 +91,20 @@ const router = createRouter({
 
 /* Configuracion del Guardian */
 
-router.beforeEach((to,from,next)=>{
-  if(to.meta.requiereAutorizacion){
-    /* le envio a una pagina de login */
-    const estaAutenticado = localStorage.getItem("estaAutenticado");
-    const token = localStorage.getItem("token");
-    if(!estaAutenticado){
-      console.log("Redirigiendo a LOGIN")
-    next({name:'login'});
+router.beforeEach((to, from, next) => {
+  // Verificamos si hay token en el LocalStorage
+  const token = localStorage.getItem("token");
+  const estaAutenticado = !!token;
 
-    }
+  // Si la ruta es privada y NO está autenticado, lo mandamos al login
+  if (to.meta.requiereAutorizacion && !estaAutenticado) {
+    // Guardamos a qué página quería ir el usuario originalmente
+    // para mandarlo allá después del login
+    next({ name: 'login', query: { redirect: to.fullPath } });
+  } else {
     
-  }else{
-    /* le dejo sin validaciones */
-    console.log("Pase Libre")
     next();
   }
-})
+});
 
 export default router

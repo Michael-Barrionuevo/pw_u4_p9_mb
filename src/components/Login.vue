@@ -5,38 +5,42 @@
     <br>
     <input v-model = "password" type="password" placeholder="Contraseña">
     <br>
-    <button @click="login()">Entrar</button>
+    <button @click="login()"> Entrar</button>
   </div>
 </template>
 
 <script>
-//import router from '@/router';
-export default {
 
-    data(){
-        return{
+import { getToken } from "@/client/AuthorizationClient";
+
+export default {
+    data() {
+        return {
             usuario: "",
             password: "",
         };
     },
-    methods:{
-        login(){
-            // Mandar a obtener el token
-            const Token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJtYXRyaWN1bGEtYXV0aCIsInN1YiI6ImFkbWluIiwiZ3JvdXBzIjpbImFkbWluIl0sImlhdCI6MTc3MDMzNjU0MSwiZXhwIjoxNzcwMzQwMTQxLCJqdGkiOiI2YmNmYzE2Zi0yY2EzLTRmNDgtOTQzNS1iYTZiNDYzYTJhY2UifQ.tuWwuzXFFlKXnjd_3X5331QCURa5Nfgq4mv2jVcvmx-4vszLhsCtVPTX9tcXaK4QERaSinUTpDGTVgLZr7BPBjf3p2SYQF7ewDa76rdJGXLQ63wL7E8cPrENS5jfABnSikCFW-fjzZKaMNOcuGOaVx6daijxwpIxc3Q7zzEJ3RufqwHiojDpsEsSnctTF_ajiTHPBKp7OflSrdffMCcwx1RGVJMbZKxmCzZCOut36vP58iHzooTnsvczMbdqOgkUTK7NKBR6mpF8YSSjOJ5Y-ALJKC-L3zHjU2SKycH6kgrGI1SZta0hC0Pp1Obu7C8OXK37JAvDcNlxVcifnA6TFg";
-            if(Token !== null){
-                console.log('Autenticación exitosa');
-                localStorage.setItem("token",Token);
-                localStorage.setItem("estaAutenticado","true");
-                //router.push({name: 'about'});
-                
-        }else{
-            console.log('Error de autenticación');
+    methods: {
+        async login() {
+  try {
+    const response = await getToken(this.usuario, this.password);
+    
+    if (response && response.accessToken) {
+      
+      localStorage.setItem("token", response.accessToken);
+      localStorage.setItem("estaAutenticado", "true");
 
-        }
-
+      
+      const destino = this.$route.query.redirect || '/';
+      
+      console.log("¡Éxito! Saltando a:", destino);
+      this.$router.push(destino);
     }
-
+  } catch (error) {
+    alert("Credenciales incorrectas");
+  }
 }
+    }
 }
 </script>
 
@@ -48,6 +52,7 @@ export default {
     border: 1px solid skyblue;
     border-radius: 8px;
     text-align: center;
+    
     
 }
 input{

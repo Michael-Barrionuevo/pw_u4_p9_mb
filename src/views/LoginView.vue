@@ -1,5 +1,9 @@
 <template>
-    <Login/>
+    <div class = "loginView">
+        <Login/>
+
+    </div>
+    
   
 </template>
 
@@ -14,5 +18,13 @@ export default {
 </script>
 
 <style>
+
+.loginView{
+    display: flex;
+    justify-content: center;
+}
+
+
+
 
 </style>
