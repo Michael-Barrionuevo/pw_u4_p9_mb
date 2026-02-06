@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
 
 
 const routes = [
@@ -13,6 +14,14 @@ const routes = [
     name: 'about',
     
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+  },
+
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
+    
+
   },
   {
     path: '/consultar',
@@ -85,7 +94,14 @@ const router = createRouter({
 router.beforeEach((to,from,next)=>{
   if(to.meta.requiereAutorizacion){
     /* le envio a una pagina de login */
-    console.log("Redirigiendo a LOGIN")
+    const estaAutenticado = localStorage.getItem("estaAutenticado");
+    const token = localStorage.getItem("token");
+    if(!estaAutenticado){
+      console.log("Redirigiendo a LOGIN")
+    next({name:'login'});
+
+    }
+    
   }else{
     /* le dejo sin validaciones */
     console.log("Pase Libre")
